@@ -14,10 +14,10 @@ public class EmailAccountPageTest extends MainPageTest {
     private static final String THIRD_GROUP = "3";
     private static final String FOURTH_GROUP = "4";
     private static final String FIFTH_GROUP = "5";
-    public static final String SIXTH_GROUP = "6";
-    public static final String SEVENTH_GROUP = "7";
-    public static final String EIGHTH_GROUP = "8";
-    public static final String NINTH_GROUP = "9";
+    private static final String SIXTH_GROUP = "6";
+    private static final String SEVENTH_GROUP = "7";
+    private static final String EIGHTH_GROUP = "8";
+    private static final String NINTH_GROUP = "9";
     private EmailAccountPage emailAccountPage;
     private EmailMessage emailMessage;
 
