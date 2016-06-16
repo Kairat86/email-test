@@ -1,0 +1,6 @@
+/.idea/
+.idea/
+email-test.iml
+target/
+/src/main/resources/email.properties
+/test-output/
