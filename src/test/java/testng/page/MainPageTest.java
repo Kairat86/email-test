@@ -25,13 +25,10 @@ public class MainPageTest {
 
     }
 
-    @Test(groups = FIRST_GROUP)
-    public void getRequestTest() {
-        mainPage.openYandexMailPage();
-    }
 
     @Test(groups = FIRST_GROUP)
     public void loginTest() {
+        mainPage.openYandexMailPage();
         mainPage.logIn(user);
     }
 

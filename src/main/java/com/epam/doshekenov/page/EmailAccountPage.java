@@ -35,7 +35,9 @@ public class EmailAccountPage extends Page {
     @FindBy(xpath = "//a[@class='b-folders__folder__link'][@href='#draft']")
     private WebElement draftsElement;
     @FindBy(xpath = "//a[@class='b-messages__message__link daria-action']")
-    private List<WebElement> messages;
+    private List<WebElement> draftMessages;
+    @FindBy(xpath = "//span[@class='b-messages__message__left__wrapper']")
+    private List<WebElement> sentMessages;
     @FindBy(id = "compose-submit")
     private WebElement sendBtn;
     private WebElement foundDraft;
@@ -87,18 +89,38 @@ public class EmailAccountPage extends Page {
 
     public void openDrafts() {
         wait.until(ExpectedConditions.visibilityOf(draftsElement)).click();
-        System.out.println(draftsElement.getText());
     }
 
-    public boolean isMsgPresent(EmailMessage emailMessage) {
+
+    public boolean isMsgPresentInDrafts(EmailMessage emailMessage) {
         try {
-            wait.until(ExpectedConditions.visibilityOfAllElements(messages));
+            wait.until(ExpectedConditions.visibilityOfAllElements(draftMessages));
         } catch (TimeoutException te) {
-            logger.debug("drafts list is empty");
+            logger.debug("list is empty");
             return false;
         }
-        for (WebElement e : messages) {
-            if (e.findElement(By.className("b-messages__subject")).getText().equals(emailMessage.getSubject()) && e.findElement(By.className("b-messages__from__text")).getText().equals(emailMessage.getTo())) {
+
+        return checkMsgPresence(draftMessages, emailMessage);
+    }
+
+    public boolean isMsgPresentInSent(EmailMessage emailMessage) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfAllElements(sentMessages));
+        } catch (TimeoutException te) {
+            logger.debug("list is empty");
+            return false;
+        }
+
+        return checkMsgPresence(draftMessages, emailMessage);
+
+    }
+
+    private boolean checkMsgPresence(List<WebElement> draftMessages, EmailMessage emailMessage) {
+        for (WebElement e : draftMessages) {
+            WebElement subjectInput = e.findElement(By.className("b-messages__subject"));
+            WebElement toInput = e.findElement(By.className("b-messages__from__text"));
+            System.out.println(subjectInput.getText() + "-" + emailMessage.getSubject());
+            if (subjectInput.getText().equals(emailMessage.getSubject()) && toInput.getText().equals(emailMessage.getTo())) {
                 foundDraft = e;
                 return true;
             }
@@ -143,5 +165,19 @@ public class EmailAccountPage extends Page {
 
     public void setMessage(EmailMessage message) {
         this.message = message;
+    }
+
+    public boolean testMethod(EmailMessage emailMessage) {
+        try {
+            driver.navigate().refresh();
+            wait.until(ExpectedConditions.invisibilityOfAllElements(draftMessages));
+            WebElement subjectInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("b-messages__subject")));
+            WebElement toInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("b-messages__from__text")));
+            System.out.println(subjectInput.getText() + "-" + toInput.getText());
+        } catch (TimeoutException te) {
+            te.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

@@ -5,7 +5,6 @@ import com.epam.doshekenov.model.EmailMessage;
 import com.epam.doshekenov.page.EmailAccountPage;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 
 public class EmailAccountPageTest extends MainPageTest {
@@ -18,6 +17,9 @@ public class EmailAccountPageTest extends MainPageTest {
     private static final String SEVENTH_GROUP = "7";
     private static final String EIGHTH_GROUP = "8";
     private static final String NINTH_GROUP = "9";
+    public static final String TENTH_GROUP = "10";
+    public static final String ELEVENTH_GROUP = "11";
+    public static final String TWELFTH_GROUP = "12";
     private EmailAccountPage emailAccountPage;
     private EmailMessage emailMessage;
 
@@ -29,53 +31,44 @@ public class EmailAccountPageTest extends MainPageTest {
     }
 
 
-    @Test(dependsOnGroups = SECOND_GROUP, groups = THIRD_GROUP)
-    public void composeNewMsgTest() {
-        emailAccountPage.composeNewMsg(emailMessage);
-    }
-
-    @Test(dependsOnGroups = THIRD_GROUP, groups = FOURTH_GROUP)
-    public void cancelBtnClickTest() {
-        emailAccountPage.cancelComposeMsg();
-    }
-
     @Test(dependsOnGroups = FIRST_GROUP, groups = SECOND_GROUP)
-    public void openDraftsTest() {
-        emailAccountPage.openDrafts();
-    }
-
-    @Test(dependsOnGroups = FOURTH_GROUP, groups = FIFTH_GROUP)
-    public void saveToDraftsBtnClickTest() {
-        emailAccountPage.saveToDrafts();
-    }
-
-    @Test(dependsOnGroups = FIFTH_GROUP, groups = SIXTH_GROUP)
     public void checkMsgIsInDrafts() {
-        Assert.assertTrue(emailAccountPage.isMsgPresent(emailMessage));
+        emailAccountPage.openDrafts();
+        emailAccountPage.composeNewMsg(emailMessage);
+        emailAccountPage.cancelComposeMsg();
+        emailAccountPage.saveToDrafts();
+        Assert.assertTrue(emailAccountPage.isMsgPresentInDrafts(emailMessage));
     }
 
-    @Test(dependsOnGroups = FIFTH_GROUP)
+    @Test(dependsOnGroups = SECOND_GROUP,groups = THIRD_GROUP)
     public void msgIntegrityCheckTest() throws CorruptedMsgException {
         emailAccountPage.checkMsgIntegrity(emailMessage);
     }
 
-    @Test(dependsOnGroups = SIXTH_GROUP, groups = SEVENTH_GROUP)
-    public void openDraftClickTest() {
+
+    @Test(dependsOnGroups = THIRD_GROUP, groups = FOURTH_GROUP)
+    public void checkMsgIsNotInDrafts() {
         emailAccountPage.openDraft();
-    }
-
-    @Test(dependsOnGroups = SEVENTH_GROUP, groups = EIGHTH_GROUP)
-    public void sendBtnClickTest() {
         emailAccountPage.sendMsg();
-    }
-
-    @Test(dependsOnGroups = EIGHTH_GROUP, groups = NINTH_GROUP)
-    public void openDraftsAfterSendMsgTest() {
         emailAccountPage.refresh();
         emailAccountPage.openDrafts();
+        Assert.assertFalse(emailAccountPage.isMsgPresentInDrafts(emailMessage));
     }
 
-    @Test(dependsOnGroups = NINTH_GROUP)
+
+
+    @Test(dependsOnGroups = FOURTH_GROUP, groups = FIFTH_GROUP)
+    public void checkMsgIsInSentMsgsListTest() {
+        emailAccountPage.openSentMessages();
+        emailAccountPage.refresh();
+        emailAccountPage.composeNewMsg(emailMessage);
+        emailAccountPage.cancelComposeMsg();
+        emailAccountPage.saveToDrafts();
+        emailAccountPage.openSentMessages();
+        Assert.assertTrue(emailAccountPage.isMsgPresentInSent(emailMessage));
+    }
+
+    @Test(dependsOnGroups = FIFTH_GROUP)
     public void logoutTest() {
         emailAccountPage.logout();
     }
