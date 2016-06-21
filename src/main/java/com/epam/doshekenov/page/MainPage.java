@@ -3,15 +3,18 @@ package com.epam.doshekenov.page;
 import com.epam.doshekenov.model.User;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class MainPage extends Page {
     private static final String LOGIN = "";
     private static final String PASSWORD = "";
-    private final String YANDEX_MAIL_URL = "https://mail.yandex.kz";
+    private static final String YANDEX_MAIL_URL = "http://mail.yandex.kz";
 
-    @FindBy(id = "nb-1")
+
+    @FindBy(xpath = "//label[@id='nb-1']")
     private WebElement loginInput;
     @FindBy(id = "nb-2")
     private WebElement passwordInput;
@@ -28,9 +31,17 @@ public class MainPage extends Page {
     }
 
     public void logIn(User user) {
-        loginInput.sendKeys(user.getLogin());
-        passwordInput.sendKeys(user.getPassword());
-        logInBtn.click();
+        Actions actions = new Actions(driver);
+        actions.moveToElement(loginInput);
+        actions.click();
+        actions.sendKeys(user.getLogin());
+        actions.build().perform();
+        actions.moveToElement(passwordInput);
+        actions.click();
+        actions.sendKeys(user.getPassword());
+        actions.build().perform();
+        actions.moveToElement(logInBtn);
+        actions.click().perform();
     }
 
 

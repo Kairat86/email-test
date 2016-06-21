@@ -19,7 +19,7 @@ public class EmailAccountPage extends Page {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailAccountPage.class.getSimpleName());
 
-    WebDriverWait wait;
+
     @FindBy(className = "js-toolbar-item-title-compose")
     private WebElement composeMsgBtn;
     @FindBy(className = "js-compose-mail-input_to")
@@ -32,9 +32,7 @@ public class EmailAccountPage extends Page {
     private WebElement cancelBtn;
     @FindBy(className = "b-popup__focus-me")
     private WebElement saveBtn;
-    @FindBy(xpath = "//a[@class='b-folders__folder__link'][@href='#draft']")
-    private WebElement draftsElement;
-    @FindBy(xpath = "//a[@class='b-messages__message__link daria-action']")
+    @FindBy(xpath = "//span[@class='b-messages__message__left__wrapper']")
     private List<WebElement> draftMessages;
     @FindBy(xpath = "//span[@class='b-messages__message__left__wrapper']")
     private List<WebElement> sentMessages;
@@ -43,8 +41,6 @@ public class EmailAccountPage extends Page {
     private WebElement foundDraft;
     @FindBy(className = "b-yabble__text__content")
     private WebElement emailAddress;
-    @FindBy(xpath = "//a[@class='b-folders__folder__link'][@href='#sent']")
-    private WebElement sentMsgsElement;
     @FindBy(className = "header-user-pic")
     private WebElement avaPic;
     @FindBy(xpath = "//div[@class='b-mail-dropdown__item']")
@@ -54,7 +50,6 @@ public class EmailAccountPage extends Page {
 
     public EmailAccountPage(WebDriver driver) {
         super(driver);
-        wait = new WebDriverWait(driver, 10);
         PageFactory.initElements(driver, this);
     }
 
@@ -80,15 +75,17 @@ public class EmailAccountPage extends Page {
     }
 
     public void cancelComposeMsg() {
+        wait.until(ExpectedConditions.visibilityOf(cancelBtn));
         cancelBtn.click();
     }
 
     public void saveToDrafts() {
+        wait.until(ExpectedConditions.visibilityOf(saveBtn));
         saveBtn.click();
     }
 
     public void openDrafts() {
-        wait.until(ExpectedConditions.visibilityOf(draftsElement)).click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@class='b-folders__folder__link'][@href='#draft']"))).click();
     }
 
 
@@ -111,11 +108,12 @@ public class EmailAccountPage extends Page {
             return false;
         }
 
-        return checkMsgPresence(draftMessages, emailMessage);
+        return checkMsgPresence(sentMessages, emailMessage);
 
     }
 
     private boolean checkMsgPresence(List<WebElement> draftMessages, EmailMessage emailMessage) {
+        System.out.println("check message presence");
         for (WebElement e : draftMessages) {
             WebElement subjectInput = e.findElement(By.className("b-messages__subject"));
             WebElement toInput = e.findElement(By.className("b-messages__from__text"));
@@ -146,8 +144,7 @@ public class EmailAccountPage extends Page {
     }
 
     public void openSentMessages() {
-        wait.until(ExpectedConditions.visibilityOf(sentMsgsElement));
-        sentMsgsElement.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@class='b-folders__folder__link'][@href='#sent']"))).click();
     }
 
     public void refresh() {
