@@ -32,14 +32,9 @@ public class MainPage extends Page {
 
     public void logIn(User user) {
         Actions actions = new Actions(driver);
-        actions.moveToElement(loginInput);
-        actions.click();
+        actions.moveToElement(loginInput).click();
         actions.sendKeys(user.getLogin());
-        actions.build().perform();
-        actions.moveToElement(passwordInput);
-        actions.click();
-        actions.sendKeys(user.getPassword());
-        actions.build().perform();
+        actions.moveToElement(passwordInput).click().sendKeys(user.getPassword());
         actions.moveToElement(logInBtn);
         actions.click().perform();
     }
