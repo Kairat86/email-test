@@ -16,6 +16,16 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>
+                        testng.TestRunner
+                    </mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -40,10 +50,5 @@
             <version>6.8.21</version>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <suiteXmlFile>${basedir}/testng.xml</suiteXmlFile>
-        <skipTests>false</skipTests>
-    </properties>
 
 </project>
