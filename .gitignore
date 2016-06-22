@@ -2,7 +2,5 @@
 .idea/
 email-test.iml
 target/
-#/src/main/resources/email.properties
 /test-output/
-/src/test/java/testng/af/
-lib/
+src/main/resources/
