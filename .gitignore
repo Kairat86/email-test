@@ -4,3 +4,4 @@ email-test.iml
 target/
 /test-output/
 src/main/resources/
+/src/main/resources/email.properties
