@@ -3,20 +3,15 @@ package testng.page;
 import com.epam.doshekenov.exception.CorruptedMsgException;
 import com.epam.doshekenov.model.EmailMessage;
 import com.epam.doshekenov.page.EmailAccountPage;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class EmailAccountPageTest extends MainPageTest {
 
-    private static final String HUB = "http://localhost:4444/wd/hub";
     private static final String SECOND_GROUP = "2";
     private static final String THIRD_GROUP = "3";
     private static final String FOURTH_GROUP = "4";
@@ -75,6 +70,6 @@ public class EmailAccountPageTest extends MainPageTest {
 
     @AfterClass
     public void quit() {
-     driver.quit();
+        driver.quit();
     }
 }

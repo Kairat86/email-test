@@ -9,8 +9,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class MainPage extends Page {
-    private static final String LOGIN = "";
-    private static final String PASSWORD = "";
     private static final String YANDEX_MAIL_URL = "http://mail.yandex.kz";
 
 
