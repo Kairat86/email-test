@@ -20,6 +20,7 @@ public abstract class Page {
         new IdWaitObserver(subject);
         new XPathWaitObserver(subject);
         new ClassNameWaitObserver(subject);
+        new TimeOutObserver(subject);
     }
 
     public WebDriver getDriver() {
