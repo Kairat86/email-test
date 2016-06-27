@@ -38,12 +38,4 @@ public class Runner extends PageObject {
 
     }
 
-    private void method() {
-        driver = getDriver();
-        open();
-        waitFor(ExpectedConditions.visibilityOf(loginFormBlock));
-        System.out.println(loginFormBlock.getText());
-        waitFor(ExpectedConditions.visibilityOf(loginInput));
-        System.out.println(loginInput.getText());
-    }
 }
