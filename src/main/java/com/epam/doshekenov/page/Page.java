@@ -1,21 +1,19 @@
 package com.epam.doshekenov.page;
 
 import com.epam.doshekenov.observer.*;
+import net.thucydides.core.annotations.DefaultUrl;
+import net.thucydides.core.pages.PageObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Test;
 
+public abstract class Page extends PageObject {
 
-public abstract class Page {
-
-    protected final WebDriver driver;
+    public static final String INBOX = "#inbox";
     protected Subject subject;
 
-    protected WebDriverWait wait;
-
-    protected Page(WebDriver driver) {
-        this.driver = driver;
-        wait = new WebDriverWait(driver, 6);
+    protected Page() {
         subject = new Subject();
         new IdWaitObserver(subject);
         new XPathWaitObserver(subject);
@@ -23,12 +21,11 @@ public abstract class Page {
         new TimeOutObserver(subject);
     }
 
-    public WebDriver getDriver() {
-        return driver;
-    }
-
     public Boolean isElementPresent(By locator) {
-        return driver.findElements(locator).size() > 0;
+        return getDriver().findElements(locator).size() > 0;
     }
 
+    public void checkURL() {
+        getDriver().getCurrentUrl().contains(INBOX);
+    }
 }

@@ -47,4 +47,17 @@ public class EmailMessage {
     public void setMsgText(String msgText) {
         this.msgText = msgText;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        EmailMessage thatMsg = (EmailMessage) o;
+        return subject.equals(thatMsg.getSubject()) && msgText.equals(thatMsg.getMsgText());
+    }
+
+    @Override
+    public String toString() {
+        return ", subject='" + subject + '\'' +
+                ", msgText='" + msgText + '\'' +
+                '}';
+    }
 }

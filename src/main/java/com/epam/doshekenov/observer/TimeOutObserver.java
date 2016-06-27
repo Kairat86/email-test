@@ -18,7 +18,7 @@ public class TimeOutObserver implements Observer {
     @Override
     public void update() {
         if (subject.getLocatorName() == null) {
-            logger.info("Registered time out! ");
+            logger.info("Registered time out!");
         }
     }
 }

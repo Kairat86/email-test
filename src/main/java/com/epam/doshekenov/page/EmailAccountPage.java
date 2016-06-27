@@ -2,6 +2,7 @@ package com.epam.doshekenov.page;
 
 import com.epam.doshekenov.exception.CorruptedMsgException;
 import com.epam.doshekenov.model.EmailMessage;
+import net.thucydides.core.annotations.DefaultUrl;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -9,20 +10,18 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.SystemClock;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class EmailAccountPage extends Page {
+@DefaultUrl("http://mail.yandex.kz")
+public class EmailAccountPage extends MainPage {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailAccountPage.class.getSimpleName());
     private static final String CLASSNAME = "classname";
     private static final String ID = "id";
-    public static final String XPATH = "xpath";
-
+    private static final String XPATH = "xpath";
 
     @FindBy(className = "js-toolbar-item-title-compose")
     private WebElement composeMsgBtn;
@@ -49,18 +48,29 @@ public class EmailAccountPage extends Page {
     private WebElement avaPic;
     @FindBy(xpath = "//div[@class='b-mail-dropdown__item']")
     private List<WebElement> dropDownElements;
+    @FindBy(xpath = "//a[@class='b-folders__folder__link'][@href='#draft']")
+    private WebElement openDraftsBtn;
+    @FindBy(xpath = "//a[@class='b-folders__folder__link'][@href='#sent']")
+    private WebElement openSentBtn;
     private EmailMessage message;
+    private WebDriver driver;
 
 
-    public EmailAccountPage(WebDriver driver) {
-        super(driver);
-        PageFactory.initElements(driver, this);
+    public EmailAccountPage() {
+        PageFactory.initElements(getDriver(), this);
+
+    }
+
+
+    public void loginUsingBlock() {
+        // loginFormBlock.logIn(user.getLogin(), user.getPassword());
     }
 
     public void composeNewMsg(EmailMessage emailMessage) {
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.visibilityOf(composeMsgBtn)).click();
+        waitFor(ExpectedConditions.visibilityOf(composeMsgBtn));
         long t2 = System.currentTimeMillis();
+        composeMsgBtn.click();
         subject.setState(CLASSNAME, t2 - t1);
         setReceiverEmail(emailMessage.getTo());
         setSubject(emailMessage.getSubject());
@@ -70,7 +80,7 @@ public class EmailAccountPage extends Page {
 
     private void setReceiverEmail(String email) {
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.visibilityOf(receiverEmailInput));
+        waitFor(ExpectedConditions.visibilityOf(receiverEmailInput));
         long t2 = System.currentTimeMillis();
         subject.setState(CLASSNAME, t2 - t1);
         receiverEmailInput.findElement(By.tagName("input")).sendKeys(email);
@@ -86,15 +96,16 @@ public class EmailAccountPage extends Page {
 
     public void cancelComposeMsg() {
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.visibilityOf(cancelBtn));
+        waitFor(ExpectedConditions.visibilityOf(cancelBtn));
         long t2 = System.currentTimeMillis();
         subject.setState(ID, t2 - t1);
         cancelBtn.click();
+        saveToDrafts();
     }
 
-    public void saveToDrafts() {
+    private void saveToDrafts() {
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.visibilityOf(saveBtn));
+        waitFor(ExpectedConditions.visibilityOf(saveBtn));
         long t2 = System.currentTimeMillis();
         subject.setState(CLASSNAME, t2 - t1);
         saveBtn.click();
@@ -102,15 +113,16 @@ public class EmailAccountPage extends Page {
 
     public void openDrafts() {
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@class='b-folders__folder__link'][@href='#draft']"))).click();
+        waitForPresenceOf("//a[@class='b-folders__folder__link'][@href='#draft']");
         long t2 = System.currentTimeMillis();
+        openDraftsBtn.click();
         subject.setState(XPATH, t2 - t1);
     }
 
 
     public boolean isMsgPresentInDrafts(EmailMessage emailMessage) {
         try {
-            wait.until(ExpectedConditions.visibilityOfAllElements(draftMessages));
+            waitFor(ExpectedConditions.visibilityOfAllElements(draftMessages));
         } catch (TimeoutException te) {
             subject.setState(null, 6);
             return false;
@@ -121,7 +133,7 @@ public class EmailAccountPage extends Page {
 
     public boolean isMsgPresentInSent(EmailMessage emailMessage) {
         try {
-            wait.until(ExpectedConditions.visibilityOfAllElements(sentMessages));
+            waitFor(ExpectedConditions.visibilityOfAllElements(sentMessages));
         } catch (TimeoutException te) {
             subject.setState(null, 6);
             return false;
@@ -147,6 +159,7 @@ public class EmailAccountPage extends Page {
 
     public void checkMsgIntegrity(EmailMessage emailMessage) throws CorruptedMsgException {
         String text = foundDraft.findElement(By.className("b-messages__firstline")).getText();
+        System.out.println("TEXT: " + text);
         if (!text.equals(emailMessage.getMsgText())) {
             throw new CorruptedMsgException("Message was corrupted!");
         }
@@ -158,31 +171,33 @@ public class EmailAccountPage extends Page {
 
     public void sendMsg() {
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.visibilityOf(emailAddress));
+        waitFor(ExpectedConditions.visibilityOf(emailAddress));
         long t2 = System.currentTimeMillis();
         subject.setState(CLASSNAME, t2 - t1);
         sendBtn.click();
     }
 
     public void openSentMessages() {
+        By xpath = By.xpath("//a[@class='b-folders__folder__link'][@href='#sent']");
         long t1 = System.currentTimeMillis();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[@class='b-folders__folder__link'][@href='#sent']"))).click();
+        waitFor(ExpectedConditions.visibilityOf(openSentBtn));
         long t2 = System.currentTimeMillis();
+        openSentBtn.click();
         subject.setState(XPATH, t2 - t1);
     }
 
 
     public void refresh() {
-        driver.navigate().refresh();
+        getDriver().navigate().refresh();
     }
 
     public void logout() {
         avaPic.click();
         By locator = By.className("b-mail-dropdown__item");
-        long t1=System.currentTimeMillis();
-        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-        long t2=System.currentTimeMillis();
-        subject.setState(CLASSNAME,t2-t1);
+        long t1 = System.currentTimeMillis();
+        //    wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        long t2 = System.currentTimeMillis();
+        //     subject.setState(CLASSNAME, t2 - t1);
         List<WebElement> elements = driver.findElements(locator);
         elements.get(elements.size() - 1).click();
         System.out.println("finish");
@@ -195,17 +210,19 @@ public class EmailAccountPage extends Page {
     public boolean testMethod(EmailMessage emailMessage) {
         try {
             driver.navigate().refresh();
-            long t1=System.currentTimeMillis();
-            wait.until(ExpectedConditions.invisibilityOfAllElements(draftMessages));
-            long t2=System.currentTimeMillis();
-            subject.setState(XPATH,t2-t1);
-            WebElement subjectInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("b-messages__subject")));
-            WebElement toInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("b-messages__from__text")));
-            System.out.println(subjectInput.getText() + "-" + toInput.getText());
+            long t1 = System.currentTimeMillis();
+            //       wait.until(ExpectedConditions.invisibilityOfAllElements(draftMessages));
+            long t2 = System.currentTimeMillis();
+            //       subject.setState(XPATH, t2 - t1);
+            //     WebElement subjectInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("b-messages__subject")));
+            //     WebElement toInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("b-messages__from__text")));
+            //      System.out.println(subjectInput.getText() + "-" + toInput.getText());
         } catch (TimeoutException te) {
             te.printStackTrace();
             return false;
         }
         return true;
     }
+
+
 }

@@ -1,16 +1,12 @@
 package com.epam.doshekenov.page;
 
 import com.epam.doshekenov.model.User;
-import org.openqa.selenium.WebDriver;
+import com.epam.doshekenov.util.PropertyManager;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class MainPage extends Page {
-    private static final String YANDEX_MAIL_URL = "http://mail.yandex.kz";
-
 
     @FindBy(xpath = "//label[@id='nb-1']")
     private WebElement loginInput;
@@ -18,24 +14,23 @@ public class MainPage extends Page {
     private WebElement passwordInput;
     @FindBy(className = "_nb-button-content")
     private WebElement logInBtn;
+    PropertyManager manager = new PropertyManager("email.properties");
+    protected User user = new User(manager.getProperty("login"), manager.getProperty("password"));
 
-    public MainPage(WebDriver driver) {
-        super(driver);
-        PageFactory.initElements(driver, this);
+
+    public void logIn() {
+        Actions actions = new Actions(getDriver());
+        actions.moveToElement(loginInput)
+                .click()
+                .sendKeys(user.getLogin())
+                .moveToElement(passwordInput)
+                .click()
+                .sendKeys(user.getPassword())
+                .moveToElement(logInBtn)
+                .click()
+                .perform();
     }
 
-    public void openYandexMailPage() {
-        driver.get(YANDEX_MAIL_URL);
-    }
-
-    public void logIn(User user) {
-        Actions actions = new Actions(driver);
-        actions.moveToElement(loginInput).click();
-        actions.sendKeys(user.getLogin());
-        actions.moveToElement(passwordInput).click().sendKeys(user.getPassword());
-        actions.moveToElement(logInBtn);
-        actions.click().perform();
-    }
 
 
 }
