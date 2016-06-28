@@ -18,6 +18,7 @@ public class MainPage {
     private static final Logger loggger = LoggerFactory.getLogger(MainPage.class.getSimpleName());
     public static final String EMAIL_PROPERTIES = "email.properties";
     public static final String YANDEX_EMAIL = "http://mail.yandex.kz";
+    public static final String RECEIVER = "receiver";
     protected EmailMessage message;
     protected WebDriverWait wait;
     protected WebDriver driver;
@@ -31,7 +32,7 @@ public class MainPage {
         PropertyManager manager = new PropertyManager(EMAIL_PROPERTIES);
         login = manager.getProperty("login");
         pass = manager.getProperty("password");
-        message = new EmailMessage("kayrat@bk.ru");
+        message = new EmailMessage(manager.getProperty(RECEIVER));
         wait = new WebDriverWait(driver, 4);
         loggger.debug("Initialized main page");
     }

@@ -3,17 +3,20 @@ package com.epam.doshekenov.step;
 import com.epam.doshekenov.exception.CorruptedMsgException;
 import com.epam.doshekenov.model.EmailMessage;
 import com.epam.doshekenov.page.EmailAccountPage;
+import com.epam.doshekenov.util.PropertyManager;
 import net.thucydides.core.annotations.Step;
 import net.thucydides.core.steps.ScenarioSteps;
 import org.testng.Assert;
 
 public class EndUserSteps extends ScenarioSteps {
 
+    public static final String EMAIL_PROPERTIES = "email.properties";
+    public static final String RECEIVER = "receiver";
     private final EmailMessage message;
     private EmailAccountPage accountPage;
 
     public EndUserSteps() {
-        message = new EmailMessage("kayrat@bk.ru");
+        message = new EmailMessage(new PropertyManager(EMAIL_PROPERTIES).getProperty(RECEIVER));
     }
 
     @Step
