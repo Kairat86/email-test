@@ -22,7 +22,6 @@ public class MainPageTest {
     private User user;
     protected PropertyManager pm;
 
-    //    @Parameters({"browser", "port"})
     @BeforeClass
     public void initMainPage() throws MalformedURLException {
         driver = WebDriverDecoratorInstance.getInstance(new FirefoxDriverCreator());
