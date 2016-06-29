@@ -1,6 +1,7 @@
 package jbehave;
 
 import com.epam.doshekenov.exception.CorruptedMsgException;
+import com.epam.doshekenov.step.EndUserSteps;
 import com.epam.doshekenov.step.HtmlElmsUserSteps;
 import net.thucydides.core.annotations.Steps;
 import org.jbehave.core.annotations.Given;
@@ -10,7 +11,7 @@ import org.jbehave.core.annotations.When;
 public class YandexEmailSteps {
 
     @Steps
-    HtmlElmsUserSteps endUser;
+    EndUserSteps endUser;
 
     @Given("the user is on http://mail.yandex.kz page")
     public void givenTheUserIsOnYandexEmailPage() {

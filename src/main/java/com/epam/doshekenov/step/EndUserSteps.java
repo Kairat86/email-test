@@ -36,6 +36,7 @@ public class EndUserSteps extends ScenarioSteps {
 
     @Step
     public void clickComposeBtn() {
+        accountPage.openDrafts();
         accountPage.composeNewMsg(message);
     }
 
@@ -47,8 +48,8 @@ public class EndUserSteps extends ScenarioSteps {
     @Step
     public void findMsgInDraftsList() {
         accountPage.openDrafts();
+        getDriver().navigate().refresh();
         boolean msgPresentInDrafts = accountPage.isMsgPresentInDrafts(message);
-        Assert.assertTrue(msgPresentInDrafts);
         System.out.println(msgPresentInDrafts);
     }
 

@@ -18,8 +18,10 @@ public class IdWaitObserver implements Observer {
 
     @Override
     public void update() {
-        if (subject.getLocatorName().equals(ID) && subject.getWaitTime() > currentWaitTime) {
-            logger.info("Registered new wait time record: " + (currentWaitTime = subject.getWaitTime()) + "");
+        String locatorName = subject.getLocatorName();
+        long waitTime = subject.getWaitTime();
+        if (locatorName!=null&&locatorName.equals(ID) && waitTime > currentWaitTime) {
+            logger.info("Registered new wait time record: " + (currentWaitTime = waitTime) + "");
         }
     }
 }

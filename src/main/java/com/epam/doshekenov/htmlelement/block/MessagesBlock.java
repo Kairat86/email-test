@@ -18,7 +18,7 @@ public class MessagesBlock extends HtmlElement {
 
     private static final Logger logger = LoggerFactory.getLogger(MessagesBlock.class.getSimpleName());
 
-    @FindBy(xpath = "//span[@class='b-messages__firstline-wrapper']")
+    @FindBy(xpath = "//span[@class='b-messages__message__left__wrapper']")
     private List<WebElement> messages;
     private WebElement foundElm;
 
@@ -48,7 +48,8 @@ public class MessagesBlock extends HtmlElement {
         return message;
     }
 
-    public void openFoundElm() {
+    public void openFoundElm(WebDriverWait wait) {
+        wait.until(ExpectedConditions.visibilityOf(foundElm));
         foundElm.click();
     }
 }

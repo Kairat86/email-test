@@ -18,7 +18,6 @@ public abstract class Page extends PageObject {
         new IdWaitObserver(subject);
         new XPathWaitObserver(subject);
         new ClassNameWaitObserver(subject);
-        new TimeOutObserver(subject);
     }
 
     public Boolean isElementPresent(By locator) {

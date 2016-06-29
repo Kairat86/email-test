@@ -62,10 +62,6 @@ public class EmailAccountPage extends MainPage {
     }
 
 
-    public void loginUsingBlock() {
-        // loginFormBlock.logIn(user.getLogin(), user.getPassword());
-    }
-
     public void composeNewMsg(EmailMessage emailMessage) {
         long t1 = System.currentTimeMillis();
         waitFor(ExpectedConditions.visibilityOf(composeMsgBtn));
@@ -113,16 +109,17 @@ public class EmailAccountPage extends MainPage {
 
     public void openDrafts() {
         long t1 = System.currentTimeMillis();
-        waitForPresenceOf("//a[@class='b-folders__folder__link'][@href='#draft']");
+        waitFor(ExpectedConditions.visibilityOf(openDraftsBtn));
         long t2 = System.currentTimeMillis();
         openDraftsBtn.click();
         subject.setState(XPATH, t2 - t1);
+        logger.debug("Open drafts btn click");
     }
 
 
     public boolean isMsgPresentInDrafts(EmailMessage emailMessage) {
         try {
-            waitFor(ExpectedConditions.visibilityOfAllElements(draftMessages));
+           waitFor(ExpectedConditions.visibilityOfAllElements(draftMessages));
         } catch (TimeoutException te) {
             subject.setState(null, 6);
             return false;
@@ -138,24 +135,31 @@ public class EmailAccountPage extends MainPage {
             subject.setState(null, 6);
             return false;
         }
-
         return checkMsgPresence(sentMessages, emailMessage);
-
     }
 
     private boolean checkMsgPresence(List<WebElement> draftMessages, EmailMessage emailMessage) {
-        System.out.println("check message presence");
+        logger.debug("Searching for " + emailMessage + "among " + draftMessages.size() + " msgs");
+
         for (WebElement e : draftMessages) {
-            WebElement subjectInput = e.findElement(By.className("b-messages__subject"));
-            WebElement toInput = e.findElement(By.className("b-messages__from__text"));
-            if (subjectInput.getText().equals(emailMessage.getSubject()) && toInput.getText().equals(emailMessage.getTo())) {
+            EmailMessage candidateMsg = convertToMsgObj(e);
+            logger.debug("Candidate: " + candidateMsg);
+            if (emailMessage.equals(candidateMsg)) {
                 foundDraft = e;
+                logger.debug("Message found");
                 return true;
             }
         }
+        logger.debug("Message was not found");
         return false;
     }
 
+    private EmailMessage convertToMsgObj(WebElement msg) {
+        EmailMessage message = new EmailMessage();
+        message.setSubject(msg.findElement(By.className("b-messages__subject")).getText());
+        message.setMsgText(msg.findElement(By.className("b-messages__firstline")).getText());
+        return message;
+    }
 
     public void checkMsgIntegrity(EmailMessage emailMessage) throws CorruptedMsgException {
         String text = foundDraft.findElement(By.className("b-messages__firstline")).getText();

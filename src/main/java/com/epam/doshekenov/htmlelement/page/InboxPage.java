@@ -38,6 +38,7 @@ public class InboxPage extends MainPage {
     }
 
     public void openDraftsList() {
+        driver.navigate().refresh();
         navigationBlock.openDraftsList(wait);
     }
 
@@ -46,7 +47,7 @@ public class InboxPage extends MainPage {
     }
 
     public void openFoundMsg() {
-        messagesBlock.openFoundElm();
+        messagesBlock.openFoundElm(wait);
     }
 
     public void send() {
@@ -56,5 +57,9 @@ public class InboxPage extends MainPage {
     public void openSentList() {
         driver.navigate().refresh();
         navigationBlock.openSentList();
+    }
+
+    public void refresh() {
+        driver.navigate().refresh();
     }
 }

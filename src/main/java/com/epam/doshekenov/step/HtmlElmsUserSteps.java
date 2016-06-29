@@ -42,9 +42,7 @@ public class HtmlElmsUserSteps extends ScenarioSteps {
 
     @Step
     public void findMsgInDraftsList() {
-        inboxPage.openDraftsList();
-        boolean msgPresentInDrafts = inboxPage.isMsgPresent();
-        Assert.assertTrue(msgPresentInDrafts);
+        inboxPage.isMsgPresent();
     }
 
     @Step
